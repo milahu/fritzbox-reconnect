@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fritzbox-reconnect"
+authors = [{name = "Milan Hauth", email = "milahu@gmail.com"}]
+description = "get new IP address from fritzbox DSL router"
+keywords = ["automation", "gui scripting"]
+#readme = {file = 'readme.md', content-type='text/markdown'}
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Environment :: X11 Applications",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Desktop Environment",
+    "Topic :: Internet :: WWW/HTTP",
+]
+dynamic = ["version"]
+dependencies = [
+    "selenium-driverless",
+    "cdp-socket",
+]
+
+[project.scripts]
+fritzbox-reconnect = "fritzbox_reconnect.fritzbox_reconnect:main"
+
+[project.urls]
+Homepage = "https://github.com/milahu/fritzbox-reconnect"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+[tool.setuptools.dynamic]
+version = {attr = "fritzbox_reconnect.fritzbox_reconnect.__version__"}
