@@ -24,6 +24,7 @@ dynamic = ["version"]
 dependencies = [
     "selenium-driverless",
     "cdp-socket",
+    "psutil",
 ]
 
 [project.scripts]

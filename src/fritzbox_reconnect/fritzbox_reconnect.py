@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 import os
 import sys
@@ -345,6 +345,13 @@ async def fritzbox_reconnect(
 
 
 def main():
+
+    # register the exit handler only in the main function
+    # when fritzbox_reconnect is called from somewhere else
+    # then the caller is responsible for cleanup
+    import atexit
+    atexit.register(exit_handler)
+
     # TODO argparse sys.argv
     import tempfile
     with tempfile.TemporaryDirectory(prefix="fritzbox_reconnect.") as tempdir:
@@ -352,6 +359,23 @@ def main():
             tempdir=tempdir,
         ))
     return 0
+
+
+
+def exit_handler():
+
+    # kill child processes on exit
+    import psutil
+    current_process = psutil.Process()
+    children = current_process.children(recursive=True)
+    for child in children:
+        try:
+            # this can raise psutil.NoSuchProcess
+            print(f'exit_handler: killing child process {child.name()} pid {child.pid}')
+            child.terminate()
+            # TODO wait max 30sec and then child.kill()?
+        except Exception as e:
+            print(f'exit_handler: killing child process failed: {e}')
 
 
 
