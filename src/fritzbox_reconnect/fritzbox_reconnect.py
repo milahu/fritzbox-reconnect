@@ -352,9 +352,14 @@ def main():
     import atexit
     atexit.register(exit_handler)
 
+    # prefer tmpfs, avoid disk writes
+    main_tempdir = f"/run/user/{os.getuid()}"
+    if not os.path.exists(main_tempdir):
+        main_tempdir = None
+
     # TODO argparse sys.argv
     import tempfile
-    with tempfile.TemporaryDirectory(prefix="fritzbox_reconnect.") as tempdir:
+    with tempfile.TemporaryDirectory(prefix="fritzbox_reconnect.", dir=main_tempdir) as tempdir:
         asyncio.get_event_loop().run_until_complete(fritzbox_reconnect(
             tempdir=tempdir,
         ))
